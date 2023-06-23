@@ -2,19 +2,19 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import StartNewChatButton from "./StartNewChatButton";
-import { getAllChatSessions, deleteChatSession } from "../utils/api-functions";
+import { apiRequest } from "../utils/api-functions";
 
 
 export default function SideNav() {
   const [data, setData] = useState<any[]>([]);
 
   const getSession = useCallback(async () => {
-    const data = await getAllChatSessions();
+    const data = await apiRequest('/api/get-sessions', {});
     setData(data.data);
   }, []);
 
   const deleteSession = useCallback(async (sessionId: string) => {
-    await deleteChatSession(sessionId);
+    await apiRequest(`/api/delete-session?sessionId=${sessionId}`, { method: "POST" });
     alert("Session deleted");
     await getSession();
   }, []);

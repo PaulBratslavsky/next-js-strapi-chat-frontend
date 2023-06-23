@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
-import { sendMessage, getSessionById } from "../utils/api-functions";
+import { apiRequest } from "../utils/api-functions";
+import { url } from "inspector";
 
 export default function ChatRoute({
   params,
@@ -20,18 +21,18 @@ export default function ChatRoute({
         sessionId: params.sessionId,
       },
     };
-    await sendMessage(formData);
+    await apiRequest('/api/send-message', { method: "POST", body: JSON.stringify(formData) });
     await getSession();
     setInput("");
     setLoading(false);
   }
 
   const getSession = useCallback(async () => {
-    const data = await getSessionById(params.sessionId);
+    const data = await apiRequest(`/api/get-session?sessionId=${params.sessionId}`, {});
     setData(data.data);
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     getSession();
   }, []);
 

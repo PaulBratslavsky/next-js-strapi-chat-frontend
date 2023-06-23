@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createNewChat } from "../utils/api-functions";
+import { createNewChat, apiRequest } from "../utils/api-functions";
 
 export default function StartNewChatButton({ callback } : { callback: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ export default function StartNewChatButton({ callback } : { callback: () => void
 
   async function handleStartNewChat() {
     setLoading(true);
-    const response = await createNewChat();
+    const response = await apiRequest("/api/create-session", { method: "POST" });
 
     if (response.data) {
       const sessionId = response.data.sessionId;
